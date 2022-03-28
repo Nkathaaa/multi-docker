@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install: 
+  - docker build -t Nkatha/docker-reactmyi  -f Dockerfile.dev  
+
+script:
+   - docker run Nkatha/docker-reactmyi npm test -- --coverage
+
+after-success:
+    - docker build -t Nkatha/multi-client ./client
+    - docker build -t Nkatha/multi-nginx ./nginx
+    - docker build -t Nkatha/multi-server ./server
+    - docker build -t Nkatha/multi-worker ./worker
+    #log In the docker cli
+    - echo "$DOCKER_PASSWORD" | docker login -u  "$DOCKER_ID" --password-stdin
+    # Take those images and push them to docker hub
+
+    - docker push Nkatha/multi-client
+    - docker push Nkatha/multi-nginx
+    - docker push Nkatha/multi-server
+    - docker push Nkatha/multi-worker
+
+
