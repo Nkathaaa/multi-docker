@@ -7,7 +7,7 @@ before_install:
 
 script:
    - docker run nkatha/docker-reactmyi npm test -- --coverage
-
+  #coverage to move the script to the next command
 after-success:
     - docker build -t nkatha/multi-client ./client
     - docker build -t nkatha/multi-nginx ./nginx
